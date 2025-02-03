@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Text Encryption</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1f4037, #99f2c8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        #container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 450px;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        h2 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input:focus,
+        textarea:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(255, 94, 98, 0.4);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+            transform: translateY(-2px);
+        }
+
+        #result {
+            margin-top: 15px;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            word-wrap: break-word;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+        }
+
+        .animated-text {
+            opacity: 1 !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 500px) {
+            #container {
+                width: 90%;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h2>Secure Text Encryption</h2>
+
+        <div id="key-generation">
+            <label for="secretKey" style="color: #fff;">Secret Key (or generate one):</label>
+            <input type="text" id="secretKey" placeholder="Enter your secret key">
+            <button onclick="generateKey()">Generate Key</button>
+        </div>
+
+        <label for="inputText" style="color: #fff;">Enter Text:</label>
+        <textarea id="inputText" placeholder="Type your text here..."></textarea>
+
+        <button onclick="encryptText()">Encrypt</button>
+        <button onclick="decryptText()">Decrypt</button>
+
+        <div id="result"></div>
+    </div>
+
+    <footer>
+        © 2025 Nithin Lambu. All rights reserved.<br>
+        Made with by Nithin Lambu
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        let secretKey;
+
+        function generateKey() {
+            secretKey = CryptoJS.lib.WordArray.random(32).toString();
+            document.getElementById("secretKey").value = secretKey;
+        }
+
+        function encryptText() {
+            const inputText = document.getElementById("inputText").value;
+            secretKey = document.getElementById("secretKey").value;
+            if (!secretKey) {
+                alert("Please enter or generate a secret key.");
+                return;
+            }
+            const encrypted = CryptoJS.AES.encrypt(inputText, secretKey).toString();
+            document.getElementById("result").textContent = "Encrypted: " + encrypted;
+            document.getElementById("result").classList.add("animated-text");
+        }
+
+        function decryptText() {
+            const inputText = document.getElementById("inputText").value;
+            secretKey = document.getElementById("secretKey").value;
+            if (!secretKey) {
+                alert("Please enter or generate a secret key.");
+                return;
+            }
+            try {
+                const decrypted = CryptoJS.AES.decrypt(inputText, secretKey).toString(CryptoJS.enc.Utf8);
+                document.getElementById("result").textContent = "Decrypted: " + decrypted;
+                document.getElementById("result").classList.add("animated-text");
+            } catch (error) {
+                document.getElementById("result").textContent = "Decryption failed. Incorrect key or corrupted data.";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
